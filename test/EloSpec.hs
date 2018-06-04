@@ -10,10 +10,12 @@ instance Arbitrary Game where
     arbitrary = Game <$> randFloat 100 5000 <*> randFloat 100 5000
 
 randFloat :: Int -> Int -> Gen Float
-randFloat min max = fromIntegral <$> choose (min, max)
+randFloat minB maxB = fromIntegral <$> choose (minB, maxB)
 
+kFactor :: Float
+kFactor = 32
 
-
+spec :: SpecWith ()
 spec =
     describe "Elo" $ do
         it "is a zero sum game" $ property $
@@ -21,7 +23,7 @@ spec =
                 let
                     win = winnerRating game
                     lose = loserRating game
-                    (newWinnerRating, newLoserRating) = elo win lose
+                    (newWinnerRating, newLoserRating) = elo kFactor win lose
                     in win + lose == newWinnerRating + newLoserRating
         it "A player with a higher rating gets a lower delta from a win" $ property $
             \game ->
@@ -30,8 +32,8 @@ spec =
                     delta old new = abs $ new - old
                     win = winnerRating game
                     lose = loserRating game
-                    (newWinnerRating, newLoserRating) = elo win lose
-                    (losersWinnerRating, winnersLoserRating) = elo lose win
+                    (newWinnerRating, _) = elo kFactor win lose
+                    (losersWinnerRating, _) = elo kFactor lose win
                     in if win > lose then
                         delta win newWinnerRating < delta lose losersWinnerRating
                        else

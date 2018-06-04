@@ -11,28 +11,20 @@ category:            Web
 extra-source-files:
 - README.md
 
+ghc-options: -Wall
+
 dependencies:
   - base >= 4.7 && < 5
 
-executables:
-  elocalc:
-    source-dirs:      src
-    main:             Main.hs
+library:
+  source-dirs: src
 
 tests:
   spec:
-    cpp-options: -DTEST
     main: Spec.hs
-    source-dirs:
-      - test
-      - src
+    source-dirs: test
     dependencies:
       - hspec == 2.*
       - QuickCheck
-      - temporary
-      - mockery >= 0.3
-      - interpolate
-      - template-haskell
-      - HUnit >= 1.6.0.0
-      - yaml >= 0.0.28
       - random
+      - elocalc

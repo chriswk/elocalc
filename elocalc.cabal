@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 69f7412d283959eb5e4de6c7485c5f12ea519fadc7652f8f01ff12d35ee6b90a
+-- hash: a22bfa60238e26b206f5e9e4465c9286b20cd0ff09d7e67e0488c029d3108f9c
 
 name:           elocalc
 version:        0.1.0.0
@@ -18,13 +18,14 @@ cabal-version:  >= 1.10
 extra-source-files:
     README.md
 
-executable elocalc
-  main-is: Main.hs
-  other-modules:
+library
+  exposed-modules:
       Elo
+  other-modules:
       Paths_elocalc
   hs-source-dirs:
       src
+  ghc-options: -Wall
   build-depends:
       base >=4.7 && <5
   default-language: Haskell2010
@@ -34,22 +35,14 @@ test-suite spec
   main-is: Spec.hs
   other-modules:
       EloSpec
-      Elo
-      Main
       Paths_elocalc
   hs-source-dirs:
       test
-      src
-  cpp-options: -DTEST
+  ghc-options: -Wall
   build-depends:
-      HUnit >=1.6.0.0
-    , QuickCheck
+      QuickCheck
     , base >=4.7 && <5
+    , elocalc
     , hspec ==2.*
-    , interpolate
-    , mockery >=0.3
     , random
-    , template-haskell
-    , temporary
-    , yaml >=0.0.28
   default-language: Haskell2010
