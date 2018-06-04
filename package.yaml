@@ -18,3 +18,21 @@ executables:
   elocalc:
     source-dirs:      src
     main:             Main.hs
+
+tests:
+  spec:
+    cpp-options: -DTEST
+    main: Spec.hs
+    source-dirs:
+      - test
+      - src
+    dependencies:
+      - hspec == 2.*
+      - QuickCheck
+      - temporary
+      - mockery >= 0.3
+      - interpolate
+      - template-haskell
+      - HUnit >= 1.6.0.0
+      - yaml >= 0.0.28
+      - random
