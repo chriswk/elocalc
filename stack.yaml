@@ -63,3 +63,5 @@ packages:
 #
 # Allow a newer minor version of GHC than the snapshot specifies
 # compiler-check: newer-minor
+extra-deps:
+  - katip-0.5.5.0

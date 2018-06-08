@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: a22bfa60238e26b206f5e9e4465c9286b20cd0ff09d7e67e0488c029d3108f9c
+-- hash: 256f638aca51c8df21c22801b7a42f1b943afbbdfea4db8b6337fea1c4ada11f
 
 name:           elocalc
 version:        0.1.0.0
@@ -20,14 +20,66 @@ extra-source-files:
 
 library
   exposed-modules:
+      Api
+      Api.User
+      Config
+      DevelMain
       Elo
+      Init
+      Logger
+      Models
   other-modules:
       Paths_elocalc
   hs-source-dirs:
       src
   ghc-options: -Wall
   build-depends:
-      base >=4.7 && <5
+      aeson
+    , base >=4.9 && <5
+    , bytestring
+    , containers
+    , ekg
+    , ekg-core
+    , fast-logger
+    , foreign-store
+    , katip >=0.5.0.2 && <0.6
+    , microlens
+    , monad-control
+    , monad-logger
+    , monad-metrics
+    , mtl
+    , persistent
+    , persistent-postgresql
+    , persistent-template
+    , resource-pool
+    , safe
+    , servant >=0.13 && <0.14
+    , servant-js >=0.9 && <0.10
+    , servant-server >=0.13 && <0.14
+    , servant-swagger
+    , text
+    , transformers
+    , unordered-containers
+    , wai
+    , wai-extra
+    , wai-middleware-metrics
+    , warp
+  default-language: Haskell2010
+
+executable elocalc
+  main-is: Main.hs
+  other-modules:
+      Paths_elocalc
+  hs-source-dirs:
+      app
+  ghc-options: -Wall
+  build-depends:
+      base >=4.9 && <5
+    , monad-logger
+    , persistent-postgresql
+    , safe
+    , wai
+    , warp
   default-language: Haskell2010
 
 test-suite spec
@@ -41,7 +93,7 @@ test-suite spec
   ghc-options: -Wall
   build-depends:
       QuickCheck
-    , base >=4.7 && <5
+    , base >=4.9 && <5
     , elocalc
     , hspec ==2.*
     , random
