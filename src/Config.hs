@@ -30,6 +30,7 @@ import           System.Environment                   (lookupEnv)
 
 import           Logger
 
+
 -- | This type represents the effects we want to have for our application.
 -- We wrap the standard Servant monad with 'ReaderT Config', which gives us
 -- access to the application configuration using the 'MonadReader'
@@ -86,7 +87,7 @@ setLogger Development = logStdoutDev
 setLogger Production  = logStdout
 
 katipLogger :: LogEnv -> Middleware
-katipLogger env app req response = runKatipT env $ do
+katipLogger env app req respond = runKatipT env $ do
   logMsg "web" InfoS "todo: received some request"
   liftIO $ app req respond
 
@@ -100,7 +101,7 @@ makePool Test env =
     runKatipT env (createPostgresqlPool (connStr "-test") (envPool Test))
 makePool Development env =
     runKatipT env $ createPostgresqlPool (connStr "") (envPool Development)
-makePool Production
+makePool Production env
     -- This function makes heavy use of the 'MaybeT' monad transformer, which
     -- might be confusing if you're not familiar with it. It allows us to
     -- combine the effects from 'IO' and the effect of 'Maybe' into a single

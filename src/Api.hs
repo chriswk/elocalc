@@ -6,30 +6,26 @@ module Api
   ( app
   ) where
 
-import           Config                      (App (..), Config (..))
-import           Control.Monad.Except
-import           Control.Monad.Reader        (ReaderT, runReaderT)
-import           Control.Monad.Reader.Class
-import           Data.Int                    (Int64)
-import           Database.Persist.Postgresql (Entity (..), fromSqlKey, insert,
-                                              selectFirst, selectList, (==.))
-import           Models
-import           Network.Wai                 (Application)
-import           Servant
+import           Control.Monad.Reader (runReaderT)
+import           Servant              ((:<|>) ((:<|>)), Proxy (Proxy), Raw,
+                                       Server, serve, serveDirectoryFileServer)
+import           Servant.Server
 
-import           Api.User
+import           Api.User             (UserAPI, userApi, userServer)
+import           Config               (AppT (..), Config (..))
 
 userApp :: Config -> Application
-userApp cfg = serve r (Proxy :: Proxy UserAPI) (appToServer cfg)
+userApp cfg = serve userApi (appToServer cfg)
 
 appToServer :: Config -> Server UserAPI
-appToServer cfg = enter (convertApp cfg) userServer
+appToServer cfg = hoistServer userApi (convertApp cfg) userServer
 
-convertApp :: Config -> App :~> ExceptT ServantErr IO
-convertApp cfg = Nat (flip runReaderT cfg . runApp)
 
-files :: Application
-files = serveDirector "assets"
+convertApp :: Config -> AppT IO a -> Handler a
+convertApp cfg appt = Handler $ runReaderT (runApp appt) cfg
+
+files :: Server Raw
+files = serveDirectoryFileServer "assets"
 
 type AppAPI = UserAPI :<|> Raw
 
@@ -37,4 +33,4 @@ appApi :: Proxy AppAPI
 appApi = Proxy
 
 app :: Config -> Application
-app cfg = server appApi (appToServer cfg :<|> files)
+app cfg = serve appApi (appToServer cfg :<|> files)

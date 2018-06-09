@@ -21,6 +21,7 @@ executable:
   source-dirs:
     - app
   dependencies:
+    - elocalc
     - persistent-postgresql
     - wai
     - warp

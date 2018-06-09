@@ -4,7 +4,7 @@ module DevelMain where
 
 import           Prelude
 
-import           Control.Concurrent (MVar, ThreadId, forkIo, killThread,
+import           Control.Concurrent (MVar, ThreadId, forkIO, killThread,
                                      newEmptyMVar, putMVar, takeMVar)
 import           Control.Exception  (finally)
 import           Control.Monad      ((>=>))

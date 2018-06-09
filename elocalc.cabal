@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 256f638aca51c8df21c22801b7a42f1b943afbbdfea4db8b6337fea1c4ada11f
+-- hash: acec71b950cb4787d4237b4d5198eaa30e48f151134b8139c87d9145e4f23ded
 
 name:           elocalc
 version:        0.1.0.0
@@ -75,6 +75,7 @@ executable elocalc
   ghc-options: -Wall
   build-depends:
       base >=4.9 && <5
+    , elocalc
     , monad-logger
     , persistent-postgresql
     , safe

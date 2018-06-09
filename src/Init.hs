@@ -30,7 +30,7 @@ runApp = bracket acquireConfig shutdownApp runApp
 
 initialize :: Config -> IO Application
 initialize cfg = do
-  waiMetrics <- registerWaiMetrics (configMetrics cfg  M.metricsStore)A
+  waiMetrics <- registerWaiMetrics (configMetrics cfg ^. M.metricsStore)
   let logger = setLogger (configEnv cfg)
   runSqlPool doMigrations (configPool cfg)
   generateJavaScript
@@ -38,14 +38,14 @@ initialize cfg = do
 
 acquireConfig :: IO Config
 acquireConfig = do
-  port <- lookupSetting "PORT" 3000
+  port <- lookupSetting "PORT" 8081
   metricsPort <- lookupSetting "METRICS" 8000
   env <- lookupSetting "ENV" Development
   logEnv <- defaultLogEnv
   pool <- makePool env logEnv
   ekgServer <- forkServer "localhost" metricsPort
   let store = serverMetricStore ekgServer
-  waiMetrics <- registerWaiMetrics store
+  _ <- registerWaiMetrics store
   metr <- M.initializeWith store
   pure Config { configPool = pool
               , configEnv = env
@@ -57,7 +57,7 @@ acquireConfig = do
 
 shutdownApp :: Config -> IO ()
 shutdownApp cfg = do
-  Katip.closeScribes (configLogEnv cfg)
+  _ <- Katip.closeScribes (configLogEnv cfg)
   Pool.destroyAllResources (configPool cfg)
   killThread (configEkgServer cfg)
   pure ()
